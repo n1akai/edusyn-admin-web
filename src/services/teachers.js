@@ -21,3 +21,24 @@ export const create = async (data) => {
     throw error;
   }
 }
+
+// Show
+export const show = async (id) => {
+  try {
+    const res = await api.post(`/teachers/${id}`)
+    return res;
+  } catch (error) {
+    console.error("Error: ", error)
+    throw error;
+  }
+}
+
+// Update
+export const update = async (id, data) => {
+  try {
+    const res = await api.put(`/teachers/${id}`, data)
+  } catch (error) {
+    console.error("Error: ", error)
+    throw error;
+  }
+}

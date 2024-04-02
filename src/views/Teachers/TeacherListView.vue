@@ -2,6 +2,9 @@
 import { ref } from 'vue';
 import DataTable from '@/components/Common/DataTable.vue'
 import { fetchTeachers } from '@/services/teachers'
+import { useRouter } from 'vue-router';
+
+const router = useRouter();
 
 const pageTitle = ref("Teacher");
 const tableHeadings = ref(['ID', 'Full name', 'Email', 'Phone number', 'Created at', 'Last upated at']);
@@ -10,6 +13,10 @@ const teachers = ref([]);
 fetchTeachers().then(res => {
   teachers.value = res.data.teachers;
 });
+
+const edit = (id) => {
+  router.push({ name: 'EditTeacher', params: { id } })
+}
 </script>
 
 <template>
@@ -69,8 +76,11 @@ fetchTeachers().then(res => {
                   <td>{{ teacher.updated_at }}</td>
                   <td class="text-end">
                     <div class="actions">
-                      <a @click="edit(teacher.teacher_id)" class="btn btn-sm bg-danger-light">
+                      <a @click="edit(teacher.teacher_id)" class="btn btn-sm bg-danger-light me-2">
                         <i class="feather-edit"></i>
+                      </a>
+                      <a @click="del(teacher.teacher_id)" class="btn btn-sm bg-danger-light">
+                        <i class="feather-trash-2"></i>
                       </a>
                     </div>
                   </td>

@@ -4,19 +4,19 @@ import PageHeader from '@/components/Common/PageHeader.vue';
 import { create } from '@/services/teachers';
 import { toast } from 'vue3-toastify';
 import { update } from '@/util/toast';
-import { useRoute } from 'vue-router';
+import { useRouter } from 'vue-router';
 
 const title = ref('Add Teacher');
 const data = ref({});
-const route = useRoute();
+const router = useRouter();
 
 const submit = async () => {
   const id = toast.loading('Please wait...')
   try {
     const res = await create(data.value);
     if (!res.error) {
-      update(id, res.error, 'success')
-      route.push({ name: 'Teachers' })
+      update(id, 'Added Successfully', 'success')
+      router.push({ name: 'Teachers' })
     } else {
       update(id, res.message, 'error')
     }
@@ -37,7 +37,7 @@ const submit = async () => {
         <div class="col-sm-12">
           <div class="card">
             <div class="card-body">
-              <form>
+              <form @submit.prevent="submit">
                 <div class="row">
                   <div class="col-12">
                     <h5 class="form-title"><span>Basic Details</span></h5>
@@ -45,19 +45,21 @@ const submit = async () => {
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>First name<span class="login-danger">*</span></label>
-                      <input v-model="data.first_name" type="text" class="form-control" placeholder="Enter First Name">
+                      <input v-model="data.first_name" type="text" class="form-control" placeholder="Enter First Name"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Last name <span class="login-danger">*</span></label>
-                      <input v-model="data.last_name" type="text" class="form-control" placeholder="Enter Last Name">
+                      <input v-model="data.last_name" type="text" class="form-control" placeholder="Enter Last Name"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Gender <span class="login-danger">*</span></label>
-                      <select v-model="data.gender" class="form-control select">
+                      <select v-model="data.gender" class="form-control select" required>
                         <option>Male</option>
                         <option>Female</option>
                       </select>
@@ -67,33 +69,35 @@ const submit = async () => {
                     <div class="form-group local-forms">
                       <label>Date Of Birth <span class="login-danger">*</span></label>
                       <input v-model="data.date_of_birth" class="form-control datetimepicker" type="date"
-                        placeholder="DD-MM-YYYY">
+                        placeholder="DD-MM-YYYY" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Mobile <span class="login-danger">*</span></label>
-                      <input v-model="data.phone_number" type="text" class="form-control" placeholder="+212601020304">
+                      <input v-model="data.phone_number" type="text" class="form-control" placeholder="+212601020304"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Joining Date <span class="login-danger">*</span></label>
                       <input v-model="data.joining_date" class="form-control datetimepicker" type="date"
-                        placeholder="DD-MM-YYYY">
+                        placeholder="DD-MM-YYYY" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4 local-forms">
                     <div class="form-group">
                       <label>Qualification <span class="login-danger">*</span></label>
                       <input v-model="data.qualification" class="form-control" type="text"
-                        placeholder="Enter Qualification">
+                        placeholder="Enter Qualification" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Experience <span class="login-danger">*</span></label>
-                      <input v-model="data.experience" class="form-control" type="text" placeholder="Enter Experience">
+                      <input v-model="data.experience" class="form-control" type="text" placeholder="Enter Experience"
+                        required>
                     </div>
                   </div>
                   <div class="col-12">
@@ -102,26 +106,28 @@ const submit = async () => {
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>CNE <span class="login-danger">*</span></label>
-                      <input v-model="data.cne" type="text" class="form-control" placeholder="Enter CNE">
+                      <input v-model="data.cne" type="text" class="form-control" placeholder="Enter CNE" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Email ID <span class="login-danger">*</span></label>
-                      <input v-model="data.email" type="email" class="form-control" placeholder="Enter Mail Id">
+                      <input v-model="data.email" type="email" class="form-control" placeholder="Enter Mail Id"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Password <span class="login-danger">*</span></label>
-                      <input v-model="data.password" type="text" class="form-control" placeholder="Enter Password">
+                      <input v-model="data.password" type="password" class="form-control" placeholder="Enter Password"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Repeat Password <span class="login-danger">*</span></label>
-                      <input v-model="data.repeated_password" type="text" class="form-control"
-                        placeholder="Repeat Password">
+                      <input v-model="data.repeated_password" type="password" class="form-control"
+                        placeholder="Repeat Password" required>
                     </div>
                   </div>
                   <div class="col-12">
@@ -130,36 +136,38 @@ const submit = async () => {
                   <div class="col-12">
                     <div class="form-group local-forms">
                       <label>Address <span class="login-danger">*</span></label>
-                      <input v-model="data.adresse" type="text" class="form-control" placeholder="Enter address">
+                      <input v-model="data.adresse" type="text" class="form-control" placeholder="Enter address"
+                        required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>City <span class="login-danger">*</span></label>
-                      <input v-model="data.city" type="text" class="form-control" placeholder="Enter City">
+                      <input v-model="data.city" type="text" class="form-control" placeholder="Enter City" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>State <span class="login-danger">*</span></label>
-                      <input v-model="data.state" type="text" class="form-control" placeholder="Enter State">
+                      <input v-model="data.state" type="text" class="form-control" placeholder="Enter State" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Zip Code <span class="login-danger">*</span></label>
-                      <input v-model="data.zip_code" type="text" class="form-control" placeholder="Enter Zip">
+                      <input v-model="data.zip_code" type="text" class="form-control" placeholder="Enter Zip" required>
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Country <span class="login-danger">*</span></label>
-                      <input v-model="data.country" type="text" class="form-control" placeholder="Enter Country">
+                      <input v-model="data.country" type="text" class="form-control" placeholder="Enter Country"
+                        required>
                     </div>
                   </div>
                   <div class="col-12">
                     <div class="student-submit">
-                      <button @click="submit" type="button" class="btn btn-primary">Submit</button>
+                      <button type="submit" class="btn btn-primary">Submit</button>
                     </div>
                   </div>
                 </div>
