@@ -1,8 +1,13 @@
 <script setup>
-import { ref } from 'vue';
+import { onMounted, ref } from 'vue';
 import DataTable from '@/components/Common/DataTable.vue'
-import { fetchTeachers } from '@/services/teachers'
+import { fetchTeachers, destroy } from '@/services/teachers'
 import { useRouter } from 'vue-router';
+import { toast } from 'vue3-toastify';
+import { update } from '@/util/toast';
+import { useConfirm } from "primevue/useconfirm";
+
+
 
 const router = useRouter();
 
@@ -10,12 +15,41 @@ const pageTitle = ref("Teacher");
 const tableHeadings = ref(['ID', 'Full name', 'Email', 'Phone number', 'Created at', 'Last upated at']);
 const teachers = ref([]);
 
-fetchTeachers().then(res => {
+onMounted(async () => {
+  const res = await fetchTeachers();
   teachers.value = res.data.teachers;
-});
+})
 
 const edit = (id) => {
   router.push({ name: 'EditTeacher', params: { id } })
+}
+
+const confirm = useConfirm();
+
+const del = (id) => {
+  confirm.require({
+    message: 'Do you want to delete this record?',
+    header: 'Delete',
+    icon: 'pi pi-info-circle',
+    rejectLabel: 'Cancel',
+    acceptLabel: 'Delete',
+    rejectClass: 'p-button-secondary p-button-outlined',
+    acceptClass: 'p-button-danger',
+    accept: async () => {
+      const toastId = toast.loading("Please wait...");
+      try {
+        const res = await destroy(id);
+        if (!res.data.error) {
+          update(toastId, "Deleted Successfully", "success");
+          teachers.value = teachers.value.filter(e => e.teacher_id != id)
+        } else {
+          update(toastId, "Something went wrong!", "error")
+        }
+      } catch (error) {
+        update(toastId, error, "error")
+      }
+    }
+  })
 }
 </script>
 

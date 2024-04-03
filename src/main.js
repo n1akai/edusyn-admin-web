@@ -18,8 +18,10 @@ import router from './router'
 import Vue3Toasity from 'vue3-toastify';
 import 'vue3-toastify/dist/index.css';
 
-import { createVuestic } from "vuestic-ui";
-import "vuestic-ui/css";
+import PrimeVue from 'primevue/config';
+import ConfirmationService from 'primevue/confirmationservice';
+import 'primevue/resources/themes/aura-light-green/theme.css'
+
 
 // Global components
 import PageHeader from './components/Common/PageHeader.vue';
@@ -33,6 +35,7 @@ app.component('PageWrapper', PageWrapper);
 
 app.use(Vue3Toasity)
 app.use(router)
-app.use(createVuestic())
+app.use(PrimeVue)
+app.use(ConfirmationService)
 
 app.mount('#app')

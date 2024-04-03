@@ -1,44 +1,27 @@
 import api from './api';
 
+
 // Fetch
 export const fetchTeachers = async () => {
-  try {
-    const res = await api.get('/teachers');
-    return res;
-  } catch (error) {
-    console.error("Error fetching teachers: ", error)
-    throw error;
-  }
+  return handleApiError(api.get('/teachers'));
 }
 
 // Create
 export const create = async (data) => {
-  try {
-    const res = await api.post('/teachers', data);
-    return res;
-  } catch (error) {
-    console.error("Error: ", error)
-    throw error;
-  }
+  return handleApiError(api.post('/teachers', data));
 }
 
 // Show
 export const show = async (id) => {
-  try {
-    const res = await api.post(`/teachers/${id}`)
-    return res;
-  } catch (error) {
-    console.error("Error: ", error)
-    throw error;
-  }
+  return handleApiError(api.get(`/teachers/${id}`));
 }
 
 // Update
 export const update = async (id, data) => {
-  try {
-    const res = await api.put(`/teachers/${id}`, data)
-  } catch (error) {
-    console.error("Error: ", error)
-    throw error;
-  }
+  handleApiError(api.put(`/teachers/${id}`, data));
+}
+
+// Delete
+export const destroy = async (id) => {
+  handleApiError(api.delete(`/teachers/${id}`));
 }
