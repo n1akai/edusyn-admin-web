@@ -136,7 +136,7 @@
         <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
           <span class="user-img">
             <img class="rounded-circle"
-              src="file:///C:/Users/ADMIN/Documents/school-management-html-admin-main/assets/img/icons/dash-icon-01.svg"
+              src="@/assets/img/icons/dash-icon-01.svg"
               width="31" alt="Soeng Souy">
             <div class="user-text">
               <h6>ABOULHODA SAAD</h6>

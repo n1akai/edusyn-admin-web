@@ -1,27 +1,27 @@
-import api from './api';
-
+import api from "./api";
+import { handleApiError } from "@/util/errorHandling";
 
 // Fetch
-export const fetchTeachers = async () => {
-  return handleApiError(api.get('/teachers'));
-}
+export const fetchTeachers = () => {
+  return api.get("/teachers").catch((error) => console.log(error.status));
+};
 
 // Create
-export const create = async (data) => {
-  return handleApiError(api.post('/teachers', data));
-}
+export const create = (data) => {
+  return handleApiError(api.post("/teachers", data));
+};
 
 // Show
-export const show = async (id) => {
+export const show = (id) => {
   return handleApiError(api.get(`/teachers/${id}`));
-}
+};
 
 // Update
-export const update = async (id, data) => {
-  handleApiError(api.put(`/teachers/${id}`, data));
-}
+export const update = (id, data) => {
+  return handleApiError(api.put(`/teachers/${id}`, data));
+};
 
 // Delete
-export const destroy = async (id) => {
-  handleApiError(api.delete(`/teachers/${id}`));
-}
+export const destroy = (id) => {
+  return handleApiError(api.delete(`/teachers/${id}`));
+};

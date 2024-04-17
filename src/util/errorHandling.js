@@ -1,13 +1,15 @@
-import { toast } from 'vue3-toastify';
-import { update } from '@/util/toast';
+import { toast } from "vue3-toastify";
+import { useRouter } from "vue-router";
 
 export const handleApiError = async (request) => {
   try {
-    const id = toast.loading("Please wait...")
     const res = await request;
-    update(id, "Request Successed", "Success");
+    if (res.error) {
+      throw new Error(res.message);
+    }
     return res;
   } catch (error) {
-    update(id, "Request Failed:", error);
+    toast.error(`Error: ${error.message}`);
+    console.log(error.status);
   }
-}
+};

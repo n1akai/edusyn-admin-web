@@ -2,7 +2,7 @@
 import { onMounted, ref } from 'vue';
 import DataTable from '@/components/Common/DataTable.vue'
 import { fetchTeachers, destroy } from '@/services/teachers'
-import { useRouter } from 'vue-router';
+import { useRouter, RouterView } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { update } from '@/util/toast';
 import { useConfirm } from "primevue/useconfirm";
@@ -17,7 +17,8 @@ const teachers = ref([]);
 
 onMounted(async () => {
   const res = await fetchTeachers();
-  teachers.value = res.data.teachers;
+  console.log(res.data);
+  teachers.value = res.data;
 })
 
 const edit = (id) => {
@@ -38,13 +39,9 @@ const del = (id) => {
     accept: async () => {
       const toastId = toast.loading("Please wait...");
       try {
-        const res = await destroy(id);
-        if (!res.data.error) {
-          update(toastId, "Deleted Successfully", "success");
-          teachers.value = teachers.value.filter(e => e.teacher_id != id)
-        } else {
-          update(toastId, "Something went wrong!", "error")
-        }
+        await destroy(id);
+        update(toastId, "Deleted Successfully", "success");
+        teachers.value = teachers.value.filter(e => e.teacher_id != id)
       } catch (error) {
         update(toastId, error, "error")
       }
@@ -54,6 +51,7 @@ const del = (id) => {
 </script>
 
 <template>
+  <router-view />
   <page-wrapper>
     <div class="content container-fluid">
       <page-header :title="pageTitle" />
