@@ -1,7 +1,7 @@
 import axios from "axios";
 
 const api = axios.create({
-  baseURL: "http://localhost/",
+  baseURL: "https://edusync.freewebhostmost.com/",
 });
 
 // Add an interceptor to add token to headers

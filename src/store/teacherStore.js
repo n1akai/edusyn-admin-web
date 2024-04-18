@@ -1,12 +1,12 @@
 import { defineStore } from "pinia";
 import api from "@/services/api";
 import { handleApiError } from "@/util/errorHandling";
+import { requestWrapper } from "@/util/requestWrapper";
 
 export const useTeacherStore = defineStore("teachers", {
   state: () => ({
     teachers: [],
     isLoading: false,
-    message: "",
     teacher: {
       first_name: "",
       last_name: "",
@@ -24,7 +24,20 @@ export const useTeacherStore = defineStore("teachers", {
       city: "",
       zip_code: "",
     },
+    filter: {
+      id: "",
+      name: "",
+      phone: ""
+    }
   }),
+  getters: {
+    filteredTeachers(state) {
+      return state.teachers
+        .filter(e => e.teacher_id.toString().includes(state.filter.id))
+        .filter(e => e.first_name.toLowerCase().includes(state.filter.name.toLowerCase()))
+        .filter(e => e.phone_number.toString().includes(state.filter.phone));
+    }
+  },
   actions: {
     async index() {
       try {
@@ -38,15 +51,9 @@ export const useTeacherStore = defineStore("teachers", {
       }
     },
     async create(data) {
-      try {
-        this.isLoading = true;
-        const res = await api.post("/teachers", data);
-        this.message = res.data.message;
-      } catch (error) {
-        handleApiError(error);
-      } finally {
-        this.isLoading = false;
-      }
+      requestWrapper(api.post("/teachers", data), () => {
+        this.router.push({ name: "Teachers" })
+      });
     },
     async show(id) {
       try {
@@ -60,26 +67,12 @@ export const useTeacherStore = defineStore("teachers", {
       }
     },
     async update(id, data) {
-      try {
-        this.isLoading = true;
-        const res = await api.put(`/teachers/${id}`, data);
-        this.message = res.data.message;
-      } catch (error) {
-        handleApiError(error);
-      } finally {
-        this.isLoading = false;
-      }
+      requestWrapper(api.put(`/teachers/${id}`, data), () => {
+        this.router.push({ name: "Teachers" })
+      });
     },
     async destroy(id) {
-      try {
-        this.isLoading = true;
-        const res = await api.put(`/teachers/${id}`);
-        this.message = res.data.message;
-      } catch (error) {
-        handleApiError(error);
-      } finally {
-        this.isLoading = false;
-      }
+      requestWrapper(api.delete(`/teachers/${id}`));
     },
   },
 });

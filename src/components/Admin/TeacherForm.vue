@@ -1,12 +1,12 @@
 <script setup>
 import { onMounted } from "vue";
 import PageHeader from "@/components/Common/PageHeader.vue";
-import { create, update as updateApi } from "@/services/teachers";
 import { useTeacherStore } from "@/store/teacherStore";
 import { storeToRefs } from "pinia";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
-import { update } from "@/util/toast";
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const props = defineProps({
   title: {
@@ -21,7 +21,7 @@ const props = defineProps({
 });
 
 const teacherStore = useTeacherStore();
-const { teacher } = storeToRefs(teacherStore);
+const { teacher, isLoading } = storeToRefs(teacherStore);
 
 
 
@@ -63,20 +63,21 @@ const submit = async () => {
     }
   }
 
-  const id = toast.loading("Please wait...");
   if (props.isEditMode) {
-    await updateApi(props.teacherId, teacher.value);
-    update(id, "Updated Successfully", "success");
-    router.push({ name: "Teachers" });
+    teacherStore.update(props.teacherId, teacher.value);
   } else {
-    await create(teacher.value);
-    update(id, "Added Successfully", "success");
-    router.push({ name: "Teachers" });
+    teacherStore.create(teacher.value);
   }
 };
 </script>
 
 <template>
+  <Dialog v-model:visible="isLoading" modal :style="{ padding: '2rem' }">
+    <template #container>
+      <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+    </template>
+  </Dialog>
   <page-wrapper>
     <div class="content container-fluid">
       <page-header :title="props.title" />
@@ -92,28 +93,16 @@ const submit = async () => {
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >First name<span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.first_name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter First Name"
-                      />
+                      <label>First name<span class="login-danger">*</span></label>
+                      <input v-model="teacher.first_name" type="text" class="form-control"
+                        placeholder="Enter First Name" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Last name <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.last_name"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter Last Name"
-                      />
+                      <label>Last name <span class="login-danger">*</span></label>
+                      <input v-model="teacher.last_name" type="text" class="form-control"
+                        placeholder="Enter Last Name" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
@@ -127,67 +116,39 @@ const submit = async () => {
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Date Of Birth
-                        <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.date_of_birth"
-                        class="form-control datetimepicker"
-                        type="date"
-                        placeholder="DD-MM-YYYY"
-                      />
+                      <label>Date Of Birth
+                        <span class="login-danger">*</span></label>
+                      <input v-model="teacher.date_of_birth" class="form-control datetimepicker" type="date"
+                        placeholder="DD-MM-YYYY" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Mobile <span class="login-danger">*</span></label>
-                      <input
-                        v-model="teacher.phone_number"
-                        type="text"
-                        class="form-control"
-                        placeholder="+212601020304"
-                      />
+                      <input v-model="teacher.phone_number" type="text" class="form-control"
+                        placeholder="+212601020304" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Joining Date <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.joining_date"
-                        class="form-control datetimepicker"
-                        type="date"
-                        placeholder="DD-MM-YYYY"
-                      />
+                      <label>Joining Date <span class="login-danger">*</span></label>
+                      <input v-model="teacher.joining_date" class="form-control datetimepicker" type="date"
+                        placeholder="DD-MM-YYYY" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4 local-forms">
                     <div class="form-group">
-                      <label
-                        >Qualification
-                        <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.qualification"
-                        class="form-control"
-                        type="text"
-                        placeholder="Enter Qualification"
-                      />
+                      <label>Qualification
+                        <span class="login-danger">*</span></label>
+                      <input v-model="teacher.qualification" class="form-control" type="text"
+                        placeholder="Enter Qualification" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Experience <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.experience"
-                        class="form-control"
-                        type="text"
-                        placeholder="Enter Experience"
-                      />
+                      <label>Experience <span class="login-danger">*</span></label>
+                      <input v-model="teacher.experience" class="form-control" type="text"
+                        placeholder="Enter Experience" />
                     </div>
                   </div>
                   <div class="col-12">
@@ -196,56 +157,30 @@ const submit = async () => {
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>CNE <span class="login-danger">*</span></label>
-                      <input
-                        v-model="teacher.cne"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter CNE"
-                        :disabled="isEditMode"
-                      />
+                      <input v-model="teacher.cne" type="text" class="form-control" placeholder="Enter CNE"
+                        :disabled="isEditMode" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Email ID <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.email"
-                        type="email"
-                        class="form-control"
-                        placeholder="Enter Mail Id"
-                        :disabled="isEditMode"
-                      />
+                      <label>Email ID <span class="login-danger">*</span></label>
+                      <input v-model="teacher.email" type="email" class="form-control" placeholder="Enter Mail Id"
+                        :disabled="isEditMode" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Password <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.password"
-                        type="password"
-                        class="form-control"
-                        placeholder="Enter Password"
-                        :disabled="isEditMode"
-                      />
+                      <label>Password <span class="login-danger">*</span></label>
+                      <input v-model="teacher.password" type="password" class="form-control"
+                        placeholder="Enter Password" :disabled="isEditMode" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Repeat Password
-                        <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.repeated_password"
-                        type="password"
-                        class="form-control"
-                        placeholder="Repeat Password"
-                        :disabled="isEditMode"
-                      />
+                      <label>Repeat Password
+                        <span class="login-danger">*</span></label>
+                      <input v-model="teacher.repeated_password" type="password" class="form-control"
+                        placeholder="Repeat Password" :disabled="isEditMode" />
                     </div>
                   </div>
                   <div class="col-12">
@@ -254,36 +189,19 @@ const submit = async () => {
                   <div class="col-12  col-sm-4">
                     <div class="form-group local-forms">
                       <label>Address <span class="login-danger">*</span></label>
-                      <input
-                        v-model="teacher.adresse"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter address"
-                      />
+                      <input v-model="teacher.adresse" type="text" class="form-control" placeholder="Enter address" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>City <span class="login-danger">*</span></label>
-                      <input
-                        v-model="teacher.city"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter City"
-                      />
+                      <input v-model="teacher.city" type="text" class="form-control" placeholder="Enter City" />
                     </div>
                   </div>
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
-                      <label
-                        >Zip Code <span class="login-danger">*</span></label
-                      >
-                      <input
-                        v-model="teacher.zip_code"
-                        type="text"
-                        class="form-control"
-                        placeholder="Enter Zip"
-                      />
+                      <label>Zip Code <span class="login-danger">*</span></label>
+                      <input v-model="teacher.zip_code" type="text" class="form-control" placeholder="Enter Zip" />
                     </div>
                   </div>
                   <div class="col-12">

@@ -7,11 +7,13 @@ import { useStudentStore } from "@/store/studentStore";
 import { useClassStore } from "@/store/classStore";
 import { storeToRefs } from "pinia";
 import { onMounted } from "vue";
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
 
 const adminStore = useAdminStore();
 const studentStore = useStudentStore();
 const classStore = useClassStore();
-const { statistics } = storeToRefs(adminStore);
+const { statistics, isLoading } = storeToRefs(adminStore);
 
 onMounted(async () => {
   adminStore.getAdmin();
@@ -22,6 +24,12 @@ onMounted(async () => {
 </script>
 
 <template>
+  <Dialog v-model:visible="isLoading" modal :style="{ padding: '2rem' }">
+    <template #container>
+      <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+    </template>
+  </Dialog>
   <page-wrapper>
     <div class="content container-fluid">
       <div class="page-header">
@@ -42,18 +50,13 @@ onMounted(async () => {
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div
-                class="db-widgets d-flex justify-content-between align-items-center"
-              >
+              <div class="db-widgets d-flex justify-content-between align-items-center">
                 <div class="db-info">
                   <h6>Students</h6>
                   <h3>{{ statistics.students }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img
-                    src="@/assets/img/icons/student.png"
-                    alt="Dashboard Icon"
-                  />
+                  <img src="@/assets/img/icons/student.png" alt="Dashboard Icon" />
                 </div>
               </div>
             </div>
@@ -62,18 +65,13 @@ onMounted(async () => {
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div
-                class="db-widgets d-flex justify-content-between align-items-center"
-              >
+              <div class="db-widgets d-flex justify-content-between align-items-center">
                 <div class="db-info">
                   <h6>Teachers</h6>
                   <h3>{{ statistics.teachers }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img
-                    src="@/assets/img/icons/teacher.png"
-                    alt="Dashboard Icon"
-                  />
+                  <img src="@/assets/img/icons/teacher.png" alt="Dashboard Icon" />
                 </div>
               </div>
             </div>
@@ -82,18 +80,13 @@ onMounted(async () => {
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div
-                class="db-widgets d-flex justify-content-between align-items-center"
-              >
+              <div class="db-widgets d-flex justify-content-between align-items-center">
                 <div class="db-info">
                   <h6>Classes</h6>
                   <h3>{{ statistics.classes }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img
-                    src="@/assets/img/icons/training.png"
-                    alt="Dashboard Icon"
-                  />
+                  <img src="@/assets/img/icons/training.png" alt="Dashboard Icon" />
                 </div>
               </div>
             </div>
@@ -102,18 +95,13 @@ onMounted(async () => {
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div
-                class="db-widgets d-flex justify-content-between align-items-center"
-              >
+              <div class="db-widgets d-flex justify-content-between align-items-center">
                 <div class="db-info">
                   <h6>Revenue</h6>
                   <h3>{{ statistics.revenue }}DH</h3>
                 </div>
                 <div class="db-icon">
-                  <img
-                    src="@/assets/img/icons/salary.png"
-                    alt="Dashboard Icon"
-                  />
+                  <img src="@/assets/img/icons/salary.png" alt="Dashboard Icon" />
                 </div>
               </div>
             </div>
@@ -175,14 +163,12 @@ onMounted(async () => {
             <div class="card-header d-flex align-items-center">
               <h5 class="card-title">Latest Students</h5>
               <ul class="chart-list-out student-ellips">
-                <RouterLink :to="{name: 'Students'}" >More</RouterLink>
+                <RouterLink :to="{ name: 'Students' }">More</RouterLink>
               </ul>
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table
-                  class="table star-student table-hover table-center table-borderless table-striped"
-                >
+                <table class="table star-student table-hover table-center table-borderless table-striped">
                   <thead class="thead-light">
                     <tr>
                       <th>ID</th>
@@ -192,10 +178,7 @@ onMounted(async () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="student in studentStore.getLatestStudents"
-                      :key="student.student_id"
-                    >
+                    <tr v-for="student in studentStore.getLatestStudents" :key="student.student_id">
                       <td class="text-nowrap">
                         <div>{{ student.student_id }}</div>
                       </td>
@@ -218,14 +201,12 @@ onMounted(async () => {
             <div class="card-header d-flex align-items-center">
               <h5 class="card-title">Classes</h5>
               <ul class="chart-list-out student-ellips">
-                <RouterLink :to="{name: 'Classes'}" >More</RouterLink>
+                <RouterLink :to="{ name: 'Classes' }">More</RouterLink>
               </ul>
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table
-                  class="table star-student table-hover table-center table-borderless table-striped"
-                >
+                <table class="table star-student table-hover table-center table-borderless table-striped">
                   <thead class="thead-light">
                     <tr>
                       <th>ID</th>
@@ -236,9 +217,7 @@ onMounted(async () => {
                     </tr>
                   </thead>
                   <tbody>
-                    <tr
-                      v-for="theClass in classStore.getLatestClasses" :key="theClass.class_id"
-                    >
+                    <tr v-for="theClass in classStore.getLatestClasses" :key="theClass.class_id">
                       <td class="text-nowrap">
                         <div>{{ theClass.class_id }}</div>
                       </td>

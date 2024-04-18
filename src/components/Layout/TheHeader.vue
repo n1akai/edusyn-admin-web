@@ -1,12 +1,20 @@
 <script setup>
 import { useAdminStore } from '@/store/adminStore';
 import { onMounted } from 'vue';
+import { useRouter } from 'vue-router';
 
 const adminStore = useAdminStore();
 
 onMounted(async () => {
   adminStore.getAdmin();
 })
+
+const router = useRouter();
+
+const logout = () => {
+  localStorage.clear();
+  router.push({ name: "Login" });
+}
 
 </script>
 
@@ -143,9 +151,7 @@ onMounted(async () => {
       <li class="nav-item dropdown has-arrow new-user-menus">
         <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
           <span class="user-img">
-            <img class="rounded-circle"
-              src="@/assets/img/icons/dash-icon-01.svg"
-              width="31" alt="Soeng Souy">
+            <img class="rounded-circle" src="@/assets/img/icons/dash-icon-01.svg" width="31" alt="Soeng Souy">
             <div class="user-text">
               <h6>{{ adminStore.fullName }}</h6>
               <p class="text-muted mb-0">Administrator</p>
@@ -164,7 +170,7 @@ onMounted(async () => {
           </div>
           <!--<a class="dropdown-item" href="profile.html">My Profile</a>-->
           <!--<a class="dropdown-item" href="inbox.html">Inbox</a>-->
-          <a class="dropdown-item" href="login.html">Logout</a>
+          <a class="dropdown-item" @click="logout">Logout</a>
         </div>
       </li>
 
@@ -174,4 +180,8 @@ onMounted(async () => {
 
 </template>
 
-<style scoped></style>
+<style scoped>
+a.dropdown-item {
+  cursor: pointer;
+}
+</style>
