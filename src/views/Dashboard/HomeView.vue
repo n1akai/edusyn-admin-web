@@ -1,17 +1,34 @@
 <script setup>
-import '@/assets/plugins/apexchart/apexcharts.min'
-import '@/assets/plugins/apexchart/chart-data'
+import "@/assets/plugins/apexchart/apexcharts.min";
+import "@/assets/plugins/apexchart/chart-data";
+import { RouterLink } from "vue-router";
+import { useAdminStore } from "@/store/adminStore";
+import { useStudentStore } from "@/store/studentStore";
+import { useClassStore } from "@/store/classStore";
+import { storeToRefs } from "pinia";
+import { onMounted } from "vue";
+
+const adminStore = useAdminStore();
+const studentStore = useStudentStore();
+const classStore = useClassStore();
+const { statistics } = storeToRefs(adminStore);
+
+onMounted(async () => {
+  adminStore.getAdmin();
+  adminStore.getStatistics();
+  studentStore.index();
+  classStore.index();
+});
 </script>
 
 <template>
-    <page-wrapper>
+  <page-wrapper>
     <div class="content container-fluid">
-
       <div class="page-header">
         <div class="row">
           <div class="col-sm-12">
             <div class="page-sub-header">
-              <h3 class="page-title">Welcome Admin!</h3>
+              <h3 class="page-title">Welcome {{ adminStore.fullName }}!</h3>
               <ul class="breadcrumb">
                 <li class="breadcrumb-item"><a href="index.html">Home</a></li>
                 <li class="breadcrumb-item active">Admin</li>
@@ -21,18 +38,22 @@ import '@/assets/plugins/apexchart/chart-data'
         </div>
       </div>
 
-
       <div class="row">
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center"
+              >
                 <div class="db-info">
                   <h6>Students</h6>
-                  <h3>50055</h3>
+                  <h3>{{ statistics.students }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img src="@/assets/img/icons/student.png" alt="Dashboard Icon">
+                  <img
+                    src="@/assets/img/icons/student.png"
+                    alt="Dashboard Icon"
+                  />
                 </div>
               </div>
             </div>
@@ -41,13 +62,18 @@ import '@/assets/plugins/apexchart/chart-data'
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center"
+              >
                 <div class="db-info">
                   <h6>Teachers</h6>
-                  <h3>3000</h3>
+                  <h3>{{ statistics.teachers }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img src="@/assets/img/icons/teacher.png" alt="Dashboard Icon">
+                  <img
+                    src="@/assets/img/icons/teacher.png"
+                    alt="Dashboard Icon"
+                  />
                 </div>
               </div>
             </div>
@@ -56,13 +82,18 @@ import '@/assets/plugins/apexchart/chart-data'
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center"
+              >
                 <div class="db-info">
                   <h6>Classes</h6>
-                  <h3>300</h3>
+                  <h3>{{ statistics.classes }}</h3>
                 </div>
                 <div class="db-icon">
-                  <img src="@/assets/img/icons/training.png" alt="Dashboard Icon">
+                  <img
+                    src="@/assets/img/icons/training.png"
+                    alt="Dashboard Icon"
+                  />
                 </div>
               </div>
             </div>
@@ -71,13 +102,18 @@ import '@/assets/plugins/apexchart/chart-data'
         <div class="col-xl-3 col-sm-6 col-12 d-flex">
           <div class="card bg-comman w-100">
             <div class="card-body">
-              <div class="db-widgets d-flex justify-content-between align-items-center">
+              <div
+                class="db-widgets d-flex justify-content-between align-items-center"
+              >
                 <div class="db-info">
                   <h6>Revenue</h6>
-                  <h3>$505</h3>
+                  <h3>{{ statistics.revenue }}DH</h3>
                 </div>
                 <div class="db-icon">
-                  <img src="@/assets/img/icons/salary.png" alt="Dashboard Icon">
+                  <img
+                    src="@/assets/img/icons/salary.png"
+                    alt="Dashboard Icon"
+                  />
                 </div>
               </div>
             </div>
@@ -85,7 +121,7 @@ import '@/assets/plugins/apexchart/chart-data'
         </div>
       </div>
 
-      <div class="row">
+      <!-- <div class="row">
         <div class="col-md-12 col-lg-6">
 
           <div class="card card-chart">
@@ -132,114 +168,43 @@ import '@/assets/plugins/apexchart/chart-data'
           </div>
 
         </div>
-      </div>
+      </div> -->
       <div class="row">
         <div class="col-xl-6 d-flex">
-
           <div class="card flex-fill student-space comman-shadow">
             <div class="card-header d-flex align-items-center">
-              <h5 class="card-title">Star Students</h5>
+              <h5 class="card-title">Latest Students</h5>
               <ul class="chart-list-out student-ellips">
-                <li class="star-menus"><a href="javascript:;"><i class="fas fa-ellipsis-v"></i></a>
-                </li>
+                <RouterLink :to="{name: 'Students'}" >More</RouterLink>
               </ul>
             </div>
             <div class="card-body">
               <div class="table-responsive">
-                <table class="table star-student table-hover table-center table-borderless table-striped">
+                <table
+                  class="table star-student table-hover table-center table-borderless table-striped"
+                >
                   <thead class="thead-light">
                     <tr>
                       <th>ID</th>
                       <th>Name</th>
-                      <th class="text-center">Marks</th>
-                      <th class="text-center">Percentage</th>
-                      <th class="text-end">Year</th>
+                      <th class="text-center">Date of birth</th>
+                      <th class="text-end">Joining date</th>
                     </tr>
                   </thead>
                   <tbody>
-                    <tr>
+                    <tr
+                      v-for="student in studentStore.getLatestStudents"
+                      :key="student.student_id"
+                    >
                       <td class="text-nowrap">
-                        <div>PRE2209</div>
+                        <div>{{ student.student_id }}</div>
                       </td>
                       <td class="text-nowrap">
-                        <a href="profile.html">
-                          <img class="rounded-circle" src="@/assets/img/profiles/avatar-02.jpg" width="25"
-                            alt="Star Students">
-                          John Smith
-                        </a>
+                        {{ student.last_name }} {{ student.first_name }}
                       </td>
-                      <td class="text-center">1185</td>
-                      <td class="text-center">98%</td>
+                      <td class="text-center">{{ student.date_of_birth }}</td>
                       <td class="text-end">
-                        <div>2019</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-nowrap">
-                        <div>PRE1245</div>
-                      </td>
-                      <td class="text-nowrap">
-                        <a href="profile.html">
-                          <img class="rounded-circle" src="@/assets/img/profiles/avatar-01.jpg" width="25"
-                            alt="Star Students">
-                          Jolie Hoskins
-                        </a>
-                      </td>
-                      <td class="text-center">1195</td>
-                      <td class="text-center">99.5%</td>
-                      <td class="text-end">
-                        <div>2018</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-nowrap">
-                        <div>PRE1625</div>
-                      </td>
-                      <td class="text-nowrap">
-                        <a href="profile.html">
-                          <img class="rounded-circle" src="@/assets/img/profiles/avatar-03.jpg" width="25"
-                            alt="Star Students">
-                          Pennington Joy
-                        </a>
-                      </td>
-                      <td class="text-center">1196</td>
-                      <td class="text-center">99.6%</td>
-                      <td class="text-end">
-                        <div>2017</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-nowrap">
-                        <div>PRE2516</div>
-                      </td>
-                      <td class="text-nowrap">
-                        <a href="profile.html">
-                          <img class="rounded-circle" src="@/assets/img/profiles/avatar-04.jpg" width="25"
-                            alt="Star Students">
-                          Millie Marsden
-                        </a>
-                      </td>
-                      <td class="text-center">1187</td>
-                      <td class="text-center">98.2%</td>
-                      <td class="text-end">
-                        <div>2016</div>
-                      </td>
-                    </tr>
-                    <tr>
-                      <td class="text-nowrap">
-                        <div>PRE2209</div>
-                      </td>
-                      <td class="text-nowrap">
-                        <a href="profile.html">
-                          <img class="rounded-circle" src="@/assets/img/profiles/avatar-05.jpg" width="25"
-                            alt="Star Students">
-                          John Smith
-                        </a>
-                      </td>
-                      <td class="text-center">1185</td>
-                      <td class="text-center">98%</td>
-                      <td class="text-end">
-                        <div>2015</div>
+                        <div>{{ student.join_date }}</div>
                       </td>
                     </tr>
                   </tbody>
@@ -247,9 +212,54 @@ import '@/assets/plugins/apexchart/chart-data'
               </div>
             </div>
           </div>
-
         </div>
         <div class="col-xl-6 d-flex">
+          <div class="card flex-fill student-space comman-shadow">
+            <div class="card-header d-flex align-items-center">
+              <h5 class="card-title">Classes</h5>
+              <ul class="chart-list-out student-ellips">
+                <RouterLink :to="{name: 'Classes'}" >More</RouterLink>
+              </ul>
+            </div>
+            <div class="card-body">
+              <div class="table-responsive">
+                <table
+                  class="table star-student table-hover table-center table-borderless table-striped"
+                >
+                  <thead class="thead-light">
+                    <tr>
+                      <th>ID</th>
+                      <th>Class</th>
+                      <th>Branch</th>
+                      <th class="text-center">Year</th>
+                      <th class="text-end">Total of students</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    <tr
+                      v-for="theClass in classStore.getLatestClasses" :key="theClass.class_id"
+                    >
+                      <td class="text-nowrap">
+                        <div>{{ theClass.class_id }}</div>
+                      </td>
+                      <td class="text-nowrap">
+                        {{ theClass.class_name }}
+                      </td>
+                      <td class="text-nowrap">
+                        {{ theClass.branch_name }}
+                      </td>
+                      <td class="text-center">{{ theClass.class_year }}</td>
+                      <td class="text-end">
+                        <div>{{ theClass.total_students }}</div>
+                      </td>
+                    </tr>
+                  </tbody>
+                </table>
+              </div>
+            </div>
+          </div>
+        </div>
+        <!-- <div class="col-xl-6 d-flex">
 
           <div class="card flex-fill comman-shadow">
             <div class="card-header d-flex align-items-center">
@@ -313,7 +323,7 @@ import '@/assets/plugins/apexchart/chart-data'
             </div>
           </div>
 
-        </div>
+        </div> -->
       </div>
     </div>
   </page-wrapper>

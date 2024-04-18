@@ -1,20 +1,15 @@
 <script setup>
 import { ref } from 'vue'
-import { useRouter } from 'vue-router';
-import { authAdmin } from '@/services/auth'
+import { useAuthStore } from '@/store/authStore';
+
+const authStore = useAuthStore();
 
 const email = ref("");
 const password = ref("");
 
-const router = useRouter();
 
 const submit = async () => {
-  const res = await authAdmin(email.value, password.value);
-  const data = res.data;
-  if (data && !data.error) {
-    localStorage.setItem("token", data.token);
-    router.push({ name: 'Dashboard' });
-  }
+  authStore.login(email.value, password.value);
 }
 </script>
 

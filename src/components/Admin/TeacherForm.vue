@@ -1,7 +1,9 @@
 <script setup>
-import { ref, onMounted } from "vue";
+import { onMounted } from "vue";
 import PageHeader from "@/components/Common/PageHeader.vue";
-import { create, show, update as updateApi } from "@/services/teachers";
+import { create, update as updateApi } from "@/services/teachers";
+import { useTeacherStore } from "@/store/teacherStore";
+import { storeToRefs } from "pinia";
 import { toast } from "vue3-toastify";
 import { useRouter } from "vue-router";
 import { update } from "@/util/toast";
@@ -18,37 +20,24 @@ const props = defineProps({
   },
 });
 
-const data = ref({
-  first_name: "",
-  last_name: "",
-  gender: "Male",
-  date_of_birth: "",
-  phone_number: "",
-  joining_date: "",
-  qualification: "",
-  experience: "",
-  cne: "",
-  email: "",
-  password: "",
-  repeated_password: "",
-  adresse: "",
-  city: "",
-  zip_code: "",
-});
+const teacherStore = useTeacherStore();
+const { teacher } = storeToRefs(teacherStore);
+
+
+
 const router = useRouter();
 
 if (props.isEditMode) {
   onMounted(async () => {
-    const res = await show(props.teacherId);
-    data.value = res.data;
+    teacherStore.show(props.teacherId)
   });
 }
 
 const submit = async () => {
-  const properties = Object.keys(data.value);
+  const properties = Object.keys(teacher.value);
   const required_fields = [];
   properties.forEach((p) => {
-    if (data.value[p] == "") {
+    if (teacher.value[p] == "") {
       required_fields.push(p);
     }
   });
@@ -61,26 +50,26 @@ const submit = async () => {
   }
 
   if (!props.isEditMode) {
-    if (data.value.password.length < 8) {
+    if (teacher.value.password.length < 8) {
       return toast.error("Password has to be at least 8 characters.");
     }
 
-    if (data.value.password != data.value.repeated_password) {
+    if (teacher.value.password != teacher.value.repeated_password) {
       return toast.error("Password doesn't match");
     }
 
-    if (!/^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(data.value.email)) {
+    if (!/^[\w-\\.]+@([\w-]+\.)+[\w-]{2,4}$/.test(teacher.value.email)) {
       return toast.error("Invalid email");
     }
   }
 
   const id = toast.loading("Please wait...");
   if (props.isEditMode) {
-    await updateApi(props.teacherId, data.value);
+    await updateApi(props.teacherId, teacher.value);
     update(id, "Updated Successfully", "success");
     router.push({ name: "Teachers" });
   } else {
-    await create(data.value);
+    await create(teacher.value);
     update(id, "Added Successfully", "success");
     router.push({ name: "Teachers" });
   }
@@ -107,7 +96,7 @@ const submit = async () => {
                         >First name<span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.first_name"
+                        v-model="teacher.first_name"
                         type="text"
                         class="form-control"
                         placeholder="Enter First Name"
@@ -120,7 +109,7 @@ const submit = async () => {
                         >Last name <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.last_name"
+                        v-model="teacher.last_name"
                         type="text"
                         class="form-control"
                         placeholder="Enter Last Name"
@@ -130,7 +119,7 @@ const submit = async () => {
                   <div class="col-12 col-sm-4">
                     <div class="form-group local-forms">
                       <label>Gender <span class="login-danger">*</span></label>
-                      <select v-model="data.gender" class="form-control select">
+                      <select v-model="teacher.gender" class="form-control select">
                         <option>Male</option>
                         <option>Female</option>
                       </select>
@@ -143,7 +132,7 @@ const submit = async () => {
                         <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.date_of_birth"
+                        v-model="teacher.date_of_birth"
                         class="form-control datetimepicker"
                         type="date"
                         placeholder="DD-MM-YYYY"
@@ -154,7 +143,7 @@ const submit = async () => {
                     <div class="form-group local-forms">
                       <label>Mobile <span class="login-danger">*</span></label>
                       <input
-                        v-model="data.phone_number"
+                        v-model="teacher.phone_number"
                         type="text"
                         class="form-control"
                         placeholder="+212601020304"
@@ -167,7 +156,7 @@ const submit = async () => {
                         >Joining Date <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.joining_date"
+                        v-model="teacher.joining_date"
                         class="form-control datetimepicker"
                         type="date"
                         placeholder="DD-MM-YYYY"
@@ -181,7 +170,7 @@ const submit = async () => {
                         <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.qualification"
+                        v-model="teacher.qualification"
                         class="form-control"
                         type="text"
                         placeholder="Enter Qualification"
@@ -194,7 +183,7 @@ const submit = async () => {
                         >Experience <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.experience"
+                        v-model="teacher.experience"
                         class="form-control"
                         type="text"
                         placeholder="Enter Experience"
@@ -208,7 +197,7 @@ const submit = async () => {
                     <div class="form-group local-forms">
                       <label>CNE <span class="login-danger">*</span></label>
                       <input
-                        v-model="data.cne"
+                        v-model="teacher.cne"
                         type="text"
                         class="form-control"
                         placeholder="Enter CNE"
@@ -222,7 +211,7 @@ const submit = async () => {
                         >Email ID <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.email"
+                        v-model="teacher.email"
                         type="email"
                         class="form-control"
                         placeholder="Enter Mail Id"
@@ -236,7 +225,7 @@ const submit = async () => {
                         >Password <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.password"
+                        v-model="teacher.password"
                         type="password"
                         class="form-control"
                         placeholder="Enter Password"
@@ -251,7 +240,7 @@ const submit = async () => {
                         <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.repeated_password"
+                        v-model="teacher.repeated_password"
                         type="password"
                         class="form-control"
                         placeholder="Repeat Password"
@@ -266,7 +255,7 @@ const submit = async () => {
                     <div class="form-group local-forms">
                       <label>Address <span class="login-danger">*</span></label>
                       <input
-                        v-model="data.adresse"
+                        v-model="teacher.adresse"
                         type="text"
                         class="form-control"
                         placeholder="Enter address"
@@ -277,7 +266,7 @@ const submit = async () => {
                     <div class="form-group local-forms">
                       <label>City <span class="login-danger">*</span></label>
                       <input
-                        v-model="data.city"
+                        v-model="teacher.city"
                         type="text"
                         class="form-control"
                         placeholder="Enter City"
@@ -290,7 +279,7 @@ const submit = async () => {
                         >Zip Code <span class="login-danger">*</span></label
                       >
                       <input
-                        v-model="data.zip_code"
+                        v-model="teacher.zip_code"
                         type="text"
                         class="form-control"
                         placeholder="Enter Zip"

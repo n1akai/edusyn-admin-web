@@ -4,16 +4,31 @@ const api = axios.create({
   baseURL: "http://localhost/",
 });
 
-const token = localStorage.getItem("token");
-api.defaults.headers.common["Authorization"] = token;
+// Add an interceptor to add token to headers
+api.interceptors.request.use(
+  (config) => {
+    const token = localStorage.getItem("token");
+    if (token) {
+      config.headers.Authorization = `Bearer ${token}`;
+    }
+    return config;
+  },
+  (error) => {
+    return Promise.reject(error);
+  }
+);
 
 // Add a response interceptor
-axios.interceptors.response.use(
+api.interceptors.response.use(
   function (response) {
     return response;
   },
   function (error) {
-    console.log(error.code);
+    console.log(error);
+    if (error.response.status === 401) {
+      localStorage.clear();
+      window.location.href = "/login";
+    }
     return Promise.reject(error);
   }
 );

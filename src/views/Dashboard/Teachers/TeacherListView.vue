@@ -1,24 +1,26 @@
 <script setup>
 import { onMounted, ref } from 'vue';
 import DataTable from '@/components/Common/DataTable.vue'
-import { fetchTeachers, destroy } from '@/services/teachers'
-import { useRouter, RouterView } from 'vue-router';
+import { destroy } from '@/services/teachers'
+import { useRouter } from 'vue-router';
 import { toast } from 'vue3-toastify';
 import { update } from '@/util/toast';
 import { useConfirm } from "primevue/useconfirm";
+import { useTeacherStore } from '@/store/teacherStore';
+import { storeToRefs } from 'pinia';
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
 
-
+const teacherStore = useTeacherStore();
+const { teachers, isLoading } = storeToRefs(teacherStore);
 
 const router = useRouter();
 
 const pageTitle = ref("Teacher");
 const tableHeadings = ref(['ID', 'Full name', 'Email', 'Phone number', 'Created at', 'Last upated at']);
-const teachers = ref([]);
 
 onMounted(async () => {
-  const res = await fetchTeachers();
-  console.log(res.data);
-  teachers.value = res.data;
+  teacherStore.index();
 })
 
 const edit = (id) => {
@@ -51,8 +53,13 @@ const del = (id) => {
 </script>
 
 <template>
-  <router-view />
   <page-wrapper>
+    <Dialog v-model:visible="isLoading" modal :style="{ padding: '2rem' }">
+      <template #container>
+        <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+    animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+      </template>
+    </Dialog>
     <div class="content container-fluid">
       <page-header :title="pageTitle" />
 

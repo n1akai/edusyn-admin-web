@@ -2,8 +2,8 @@ import api from "./api";
 import { handleApiError } from "@/util/errorHandling";
 
 // Fetch
-export const fetchTeachers = () => {
-  return api.get("/teachers").catch((error) => console.log(error.status));
+export const index = () => {
+  return handleApiError(api.get("/teachers"));
 };
 
 // Create

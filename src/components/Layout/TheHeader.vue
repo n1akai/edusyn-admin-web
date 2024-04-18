@@ -1,4 +1,12 @@
 <script setup>
+import { useAdminStore } from '@/store/adminStore';
+import { onMounted } from 'vue';
+
+const adminStore = useAdminStore();
+
+onMounted(async () => {
+  adminStore.getAdmin();
+})
 
 </script>
 
@@ -30,7 +38,7 @@
     </a>
 
     <ul class="nav user-menu">
-      <li class="nav-item dropdown noti-dropdown language-drop me-2">
+      <!--<li class="nav-item dropdown noti-dropdown language-drop me-2">
         <a href="#" class="dropdown-toggle nav-link header-nav-list" data-bs-toggle="dropdown">
           <img src="@/assets/img/icons/header-icon-01.svg" alt="">
         </a>
@@ -43,9 +51,9 @@
             </div>
           </div>
         </div>
-      </li>
+      </li>  -->
 
-      <li class="nav-item dropdown noti-dropdown me-2">
+      <!-- <li class="nav-item dropdown noti-dropdown me-2">
         <a href="#" class="dropdown-toggle nav-link header-nav-list" data-bs-toggle="dropdown">
           <img src="@/assets/img/icons/header-icon-05.svg" alt="">
         </a>
@@ -124,13 +132,13 @@
             <a href="#">View all Notifications</a>
           </div>
         </div>
-      </li>
+      </li> -->
 
-      <li class="nav-item zoom-screen me-2">
+      <!-- <li class="nav-item zoom-screen me-2">
         <a href="#" class="nav-link header-nav-list win-maximize">
           <img src="@/assets/img/icons/header-icon-04.svg" alt="">
         </a>
-      </li>
+      </li> -->
 
       <li class="nav-item dropdown has-arrow new-user-menus">
         <a href="#" class="dropdown-toggle nav-link" data-bs-toggle="dropdown">
@@ -139,7 +147,7 @@
               src="@/assets/img/icons/dash-icon-01.svg"
               width="31" alt="Soeng Souy">
             <div class="user-text">
-              <h6>ABOULHODA SAAD</h6>
+              <h6>{{ adminStore.fullName }}</h6>
               <p class="text-muted mb-0">Administrator</p>
             </div>
           </span>
@@ -150,12 +158,12 @@
               <img src="@/assets/img/profiles/avatar-01.jpg" alt="User Image" class="avatar-img rounded-circle">
             </div>
             <div class="user-text">
-              <h6>Soeng Souy</h6>
+              <h6>{{ adminStore.fullName }}</h6>
               <p class="text-muted mb-0">Administrator</p>
             </div>
           </div>
-          <a class="dropdown-item" href="profile.html">My Profile</a>
-          <a class="dropdown-item" href="inbox.html">Inbox</a>
+          <!--<a class="dropdown-item" href="profile.html">My Profile</a>-->
+          <!--<a class="dropdown-item" href="inbox.html">Inbox</a>-->
           <a class="dropdown-item" href="login.html">Logout</a>
         </div>
       </li>
