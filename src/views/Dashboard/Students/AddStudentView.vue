@@ -1,10 +1,10 @@
 <script setup>
-import TeacherForm from "@/components/Admin/TeacherForm.vue";
+import StudentForm from "@/components/Admin/StudentForm.vue";
 
 const title = "Add Teacher";
 
 </script>
 
 <template>
-  <teacher-form :title="title" />
+  <student-form :title="title" />
 </template>

@@ -27,16 +27,20 @@ export const useTeacherStore = defineStore("teachers", {
     filter: {
       id: "",
       name: "",
-      phone: ""
-    }
+      phone: "",
+    },
   }),
   getters: {
     filteredTeachers(state) {
       return state.teachers
-        .filter(e => e.teacher_id.toString().includes(state.filter.id))
-        .filter(e => e.first_name.toLowerCase().includes(state.filter.name.toLowerCase()))
-        .filter(e => e.phone_number.toString().includes(state.filter.phone));
-    }
+        .filter((e) => e.teacher_id.toString().includes(state.filter.id))
+        .filter((e) =>
+          `${e.first_name.toLowerCase()} ${e.last_name.toLowerCase()}`.includes(
+            state.filter.name.toLowerCase()
+          )
+        )
+        .filter((e) => e.phone_number.toString().includes(state.filter.phone));
+    },
   },
   actions: {
     async index() {
@@ -52,7 +56,7 @@ export const useTeacherStore = defineStore("teachers", {
     },
     async create(data) {
       requestWrapper(api.post("/teachers", data), () => {
-        this.router.push({ name: "Teachers" })
+        this.router.push({ name: "Teachers" });
       });
     },
     async show(id) {
@@ -68,11 +72,13 @@ export const useTeacherStore = defineStore("teachers", {
     },
     async update(id, data) {
       requestWrapper(api.put(`/teachers/${id}`, data), () => {
-        this.router.push({ name: "Teachers" })
+        this.router.push({ name: "Teachers" });
       });
     },
     async destroy(id) {
-      requestWrapper(api.delete(`/teachers/${id}`));
+      requestWrapper(api.delete(`/teachers/${id}`), () => {
+        this.teachers = this.teachers.filter((e) => e.teacher_id != id);
+      });
     },
   },
 });

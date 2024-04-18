@@ -1,20 +1,14 @@
 <script setup>
 import DataTable from '@/components/Common/DataTable.vue'
-import { useTeacherStore } from '@/store/teacherStore';
-import { storeToRefs } from 'pinia';
-import Dialog from 'primevue/dialog';
-import ProgressSpinner from 'primevue/progressspinner';
 
 
 // Props 
-const props = defineProps(["name", "headings", "isLoading"])
+const props = defineProps(["name", "headings"])
 
 // Emit
 const emit = defineEmits(["add"])
 
-const teacherStore = useTeacherStore();
-const { teachers, isLoading, filter } = storeToRefs(teacherStore);
-
+// Methods
 const add = () => {
   emit("add");
 }
@@ -22,15 +16,9 @@ const add = () => {
 </script>
 
 <template>
-  <Dialog v-model:visible="isLoading" modal :style="{ padding: '2rem' }">
-    <template #container>
-      <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
-        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
-    </template>
-  </Dialog>
   <page-wrapper>
     <div class="content container-fluid">
-      <page-header :title="props.name" />
+      <page-header :title="name" />
 
       <slot name="header"></slot>
 
@@ -54,7 +42,7 @@ const add = () => {
                 </div>
               </div>
 
-              <data-table :headings="tableHeadings">
+              <data-table :headings="headings">
                 <slot></slot>
               </data-table>
 

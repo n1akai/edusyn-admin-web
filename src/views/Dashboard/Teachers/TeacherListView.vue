@@ -1,14 +1,16 @@
 <script setup>
 import { onMounted, ref } from 'vue';
-import DataTable from '@/components/Common/DataTable.vue'
+import TheTable from '@/components/Admin/TheTable.vue';
 import { useRouter } from 'vue-router';
 import { useConfirm } from "primevue/useconfirm";
 import { useTeacherStore } from '@/store/teacherStore';
 import { storeToRefs } from 'pinia';
+import Dialog from 'primevue/dialog';
+import ProgressSpinner from 'primevue/progressspinner';
 
 // Stores
 const teacherStore = useTeacherStore();
-const { teachers, isLoading, filter } = storeToRefs(teacherStore);
+const { isLoading, filter } = storeToRefs(teacherStore);
 
 // Router
 const router = useRouter();
@@ -48,8 +50,13 @@ const del = (id) => {
 </script>
 
 <template>
-  <h1>Hello world</h1>
-  <DataTable :name="pageTitle" :isLoading="isLoading" :headings="tableHeadings" @add="add">
+    <Dialog v-model:visible="isLoading" modal :style="{ padding: '2rem' }">
+    <template #container>
+      <ProgressSpinner style="width: 50px; height: 50px" strokeWidth="8" fill="var(--surface-ground)"
+        animationDuration=".5s" aria-label="Custom ProgressSpinner" />
+    </template>
+  </Dialog>
+  <the-table :name="pageTitle" :headings="tableHeadings" @add="add">
     <template #header>
       <div class="student-group-form">
         <div class="row">
@@ -71,8 +78,8 @@ const del = (id) => {
         </div>
       </div>
     </template>
-    <template>
-      <tr v-for="teacher in teacherStore.filteredTeachers" :key="teacher.teacher_id">
+
+    <tr v-for="teacher in teacherStore.filteredTeachers" :key="teacher.teacher_id">
         <td>{{ teacher.teacher_id }}</td>
         <td>
           {{ teacher.first_name }} {{ teacher.last_name }}
@@ -92,6 +99,5 @@ const del = (id) => {
           </div>
         </td>
       </tr>
-    </template>
-  </DataTable>
+  </the-table>
 </template>

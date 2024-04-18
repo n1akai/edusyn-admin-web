@@ -1,5 +1,5 @@
 <script setup>
-import TeacherForm from "@/components/Admin/TeacherForm.vue";
+import StudentForm from "@/components/Admin/StudentForm.vue";
 import { useRoute } from "vue-router";
 
 const route = useRoute();
@@ -10,5 +10,5 @@ const id = route.params.id;
 </script>
 
 <template>
-  <teacher-form :title="title" :isEditMode="true" :teacherId="id" />
+  <student-form :title="title" :isEditMode="true" :id="id" />
 </template>
